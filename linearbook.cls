@@ -11,20 +11,63 @@
 %
 % This is a free LaTeX text book template from Typesetters.se.
 % See tstextbook.tex for an example of how to use this class.
+%--------------------------------------------------------------------------
 
+
+% Class Definition and Parameters
+%--------------------------------------------------------------------------
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{linearbook}[2020/04/20 Free LaTeX text book template modified with tstextbook from Typesetters.se]
+\ProvidesClass{linearbook}[2020/04/20 Free LaTeX text book template.]
+
+% Bool Values
+% \RequirePackage{xparse}
+\RequirePackage{etoolbox}
+\newbool{CJK} 
+\newbool{Palatino}
+
+\DeclareOption{cjk}{\booltrue{CJK}}
+\DeclareOption{palatino}{\booltrue{Palatino}}
+\DeclareOption*{\PassOptionsToClass{\CurrentOption}{book}}
+
+\ProcessOptions\relax
+
 \LoadClass[11pt,onecolumn,titlepage,twoside,openany]{book}
 
-% Bookmark
+% Language and Fonts
+%--------------------------------------------------------------------------
+\RequirePackage[american]{babel}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[OT1,T1]{fontenc}
+\ifbool{Palatino}{%
+\RequirePackage{mathpazo}
+}{%
+  \RequirePackage{times}
+}
+\ifbool{CJK}{%
+  \RequirePackage{xeCJK}
+  \setCJKmainfont[ItalicFont={楷体}]{Noto Serif CJK SC}
+                                                  % 正体为思源宋体,斜体为楷体
+  \setCJKmonofont{Courier}
+  \setCJKsansfont{Noto Sans S Chinese}
+  \setmainfont{Palatino-Roman}
+  \newCJKfontfamily[kx]\kxzdt{TypeLand KhangXi Dict Demo}
+                                                  % 康熙字典體                                                  
+  % \xeCJKsetup{CJKmath=true}                       % 在数学环境中输出CJK字符                                                  
+  \xeCJKsetup{CheckSingle=true}                   % 避免最后一个字单独成行                                                
+  \xeCJKsetup{PlainEquation=true}                 % 使用$$...$$来输入行间公式   
+  \xeCJKsetup{PunctStyle=quanjiao}                % 设置中文标点符号为全角式
+  % 可以设置为'banjiao'(半角),'kaiming'(开明)                         
+}
+
+\newcommand{\ppl}{\fontencoding{OT1}\fontfamily{ppl}\fontseries{m}\selectfont}
+\newcommand{\pplj}{\fontencoding{OT1}\fontfamily{pplj}\fontseries{m}\selectfont}
+
+
+% Hyperref
 %--------------------------------------------------------------------------
 \RequirePackage[bookmarksnumbered]{hyperref}
 \hypersetup{hidelinks}
 
-% Language
-%--------------------------------------------------------------------------
-\RequirePackage[american]{babel}
-\RequirePackage[utf8]{inputenc}
 
 % Main Geometry
 %--------------------------------------------------------------------------
@@ -34,18 +77,6 @@
                 headsep=0.7cm,headheight=0.5cm,
                 marginparsep=0.4cm,marginparwidth=4.5cm]{geometry}           
 
-% Fonts
-%--------------------------------------------------------------------------
-% \RequirePackage{kpfonts}    % TODO:if控制英文和中文
-
-\RequirePackage[T1]{fontenc}
-\RequirePackage{fontspec}
-\RequirePackage{xeCJK}
-\setCJKmainfont[BoldFont={Noto Sans S Chinese},
-                ItalicFont={楷体}
-                ]{Noto Serif CJK SC}
-\setCJKmonofont{TypeLand KhangXi Dict Demo}
-\setCJKsansfont{Noto Sans S Chinese} 
 
 % Colors
 %--------------------------------------------------------------------------
@@ -57,6 +88,7 @@
 \definecolor{tsyellow}{RGB}{255,185,88}
 \definecolor{tsgrey}{RGB}{200,200,200}
 
+
 % Graphics
 %--------------------------------------------------------------------------
 \RequirePackage{graphicx}
@@ -65,6 +97,7 @@
 \RequirePackage[pages=some]{background}
 \backgroundsetup{scale=1,color=black,opacity=1.0,angle=0,
 contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
+
 
 % Header and footer styling
 %--------------------------------------------------------------------------
@@ -77,10 +110,12 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}
 
+
 % Section styling
 %--------------------------------------------------------------------------
 \RequirePackage{sectsty}
 \sectionfont{\sf\color{tssteelblue}\sectionrule{0ex}{0pt}{-1ex}{1pt}}
+
 
 % Chapter styling
 %--------------------------------------------------------------------------
@@ -110,6 +145,7 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
 \end{tikzpicture}
 \vspace{7.5cm}  % TODO:修改
 }
+
 
 % Unnumbered chapters (without minitoc)  在这里设计目录、后记、参考文献等的标题样式
 \renewcommand{\@makeschapterhead}[1]{
@@ -366,7 +402,10 @@ textsc  % TODO:重新设计
 
 % Bibliography
 %--------------------------------------------------------------------------
-\RequirePackage[backend=biber]{biblatex}
+\RequirePackage[backend=biber,citestyle=authoryear]{biblatex}
+\RequirePackage[autostyle=true]{csquotes} 
+% Required to generate language-dependent quotes in the bibliography
+
 \addbibresource{bibliography.bib}
 
 % Index
