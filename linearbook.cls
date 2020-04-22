@@ -31,7 +31,7 @@
 
 \ProcessOptions\relax
 
-\LoadClass[11pt,onecolumn,titlepage,twoside,openany]{book}
+\LoadClass[onecolumn,titlepage,twoside,openany]{book}
 
 % Language and Fonts
 %--------------------------------------------------------------------------
@@ -39,7 +39,7 @@
 \RequirePackage[utf8]{inputenc}
 \RequirePackage[OT1,T1]{fontenc}
 \ifbool{Palatino}{%
-\RequirePackage{mathpazo}
+  \RequirePackage{mathpazo}
 }{%
   \RequirePackage{times}
 }
@@ -48,8 +48,10 @@
   \setCJKmainfont[ItalicFont={楷体}]{Noto Serif CJK SC}
                                                   % 正体为思源宋体,斜体为楷体
   \setCJKmonofont{Courier}
-  \setCJKsansfont{Noto Sans S Chinese}
+  \setCJKsansfont{黑体}
   \setmainfont{Palatino-Roman}
+  % \setmonofont{}
+  % \setsansfont{}
   \newCJKfontfamily[kx]\kxzdt{TypeLand KhangXi Dict Demo}
                                                   % 康熙字典體                                                  
   % \xeCJKsetup{CJKmath=true}                       % 在数学环境中输出CJK字符                                                  
@@ -81,6 +83,12 @@
 % Colors
 %--------------------------------------------------------------------------
 \RequirePackage{xcolor}
+\definecolor{lbdeepblue}{HTML}{118098}
+\definecolor{lblightblue}{HTML}{00acef}
+\definecolor{lbgrayblue}{HTML}{bfd6db}
+\definecolor{lbgreen}{HTML}{c7d9b2}
+\definecolor{lbred}{HTML}{a3262c}
+
 \definecolor{tssteelblue}{RGB}{70,130,180}
 \definecolor{tsorange}{RGB}{255,138,88}
 \definecolor{tsblue}{RGB}{23,74,117}
@@ -93,7 +101,16 @@
 %--------------------------------------------------------------------------
 \RequirePackage{graphicx}
 \graphicspath{{images/}}
+
+% Tikz
 \RequirePackage{tikz}
+\usetikzlibrary{calc}
+
+% Pgfplots
+\RequirePackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepgfplotslibrary{external}
+
 \RequirePackage[pages=some]{background}
 \backgroundsetup{scale=1,color=black,opacity=1.0,angle=0,
 contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
@@ -121,7 +138,18 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
 %--------------------------------------------------------------------------
 \makeatletter
 
-% Numbered chapters (with minitoc)
+% \newcommand{\line}{}
+
+% \begin{tikzpicture}[remember picture,overlay]
+%   \node [xshift=1cm,yshift=1cm] at (current page.south west)
+%   [text width=7cm,fill=red!20,rounded corners,above right]
+%   {
+%   This is an absolutely positioned text in the
+%   lower left corner. No shipout-hackery is used.
+%   };
+%   \end{tikzpicture}
+
+% Numbered chapters
 \renewcommand{\@makechapterhead}[1]{
   \begin{tikzpicture}[remember picture,overlay]
     \node at (current page.north west)
@@ -147,26 +175,22 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
 }
 
 
-% Unnumbered chapters (without minitoc)  在这里设计目录、后记、参考文献等的标题样式
+% Unnumbered chapters
 \renewcommand{\@makeschapterhead}[1]{
   \begin{tikzpicture}[remember picture,overlay]
     \node at (current page.north west)
-  {
-    \begin{tikzpicture}[remember picture,overlay]
-      % Chapter heading
-      \draw[anchor=west,inner sep=0pt] (-0.1cm,-1.5cm) node
-           [black,
-            ultra thick,
-            fill=tsorange!10,
-            fill opacity=.6,
-            inner sep=10pt]
-           (0,0)
-           {\parbox[t][1.6cm][t]{\paperwidth}
-           {\huge\bfseries\sffamily\flushleft #1}};
-    \end{tikzpicture}
-  };
-\end{tikzpicture}
-\vspace{8cm}  % TODO:修改
+      {
+        \begin{tikzpicture}[remember picture,overlay]
+          \draw[fill=lbdeepblue,draw opacity=0]
+            ++(0,-2cm) rectangle ++(\paperwidth,-4pt);
+          \node[color=lbdeepblue,inner sep=12pt,below right] (text)
+            at  +(6.1cm,-2cm) {\Huge\ppl #1};
+          \draw[line width=2pt,color=lbgreen]
+            ++(6.1cm,0) |- ($(text.south east)+(0,4pt)$); 
+        \end{tikzpicture}
+      };
+  \end{tikzpicture}
+\vspace{2cm}
 }
 
 % Table of contents styling
@@ -263,7 +287,7 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
 \newgeometry{twoside=false,
             includemp=true,
             reversemp=true,
-            inner=2cm,outer=1.2cm,
+            left=2cm,right=1.2cm,
             top=2cm,bottom=1.5cm,
             headsep=0.7cm,headheight=0.5cm,
             marginparsep=0.4cm,marginparwidth=4.5cm}     
@@ -271,9 +295,9 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
 \tableofcontents
 
 % Preface (and others)  TODO:重新设计宏命令
-\chapter*{Preface}
+{\chapter*{Preface}
 textsc  % TODO:重新设计
-
+}
 \restoregeometry
 
 \cleardoublepage
@@ -402,7 +426,7 @@ textsc  % TODO:重新设计
 
 % Bibliography
 %--------------------------------------------------------------------------
-\RequirePackage[backend=biber,citestyle=authoryear]{biblatex}
+\RequirePackage[backend=biber,style=authoryear]{biblatex}
 \RequirePackage[autostyle=true]{csquotes} 
 % Required to generate language-dependent quotes in the bibliography
 
