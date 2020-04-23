@@ -84,8 +84,9 @@
 %--------------------------------------------------------------------------
 \RequirePackage{xcolor}
 \definecolor{lbdeepblue}{HTML}{118098}
-\definecolor{lblightblue}{HTML}{00acef}
+\definecolor{lbblue}{HTML}{00acef}
 \definecolor{lbgrayblue}{HTML}{bfd6db}
+\definecolor{lbdeepgreen}{HTML}{457d3a}
 \definecolor{lbgreen}{HTML}{c7d9b2}
 \definecolor{lbred}{HTML}{a3262c}
 
@@ -105,6 +106,9 @@
 % Tikz
 \RequirePackage{tikz}
 \usetikzlibrary{calc}
+
+% Circuitikz
+\RequirePackage[siunitx,RPvoltages,european]{circuitikz}
 
 % Pgfplots
 \RequirePackage{pgfplots}
@@ -137,60 +141,110 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
 % Chapter styling
 %--------------------------------------------------------------------------
 \makeatletter
-
-% \newcommand{\line}{}
-
-% \begin{tikzpicture}[remember picture,overlay]
-%   \node [xshift=1cm,yshift=1cm] at (current page.south west)
-%   [text width=7cm,fill=red!20,rounded corners,above right]
-%   {
-%   This is an absolutely positioned text in the
-%   lower left corner. No shipout-hackery is used.
-%   };
-%   \end{tikzpicture}
+\RequirePackage{ifoddpage}
 
 % Numbered chapters
-\renewcommand{\@makechapterhead}[1]{
-  \begin{tikzpicture}[remember picture,overlay]
-    \node at (current page.north west)
-  {
+\renewcommand{\@makechapterhead}[2][Summary]{
+  \checkoddpage
+  \@ifoddpage{
     \begin{tikzpicture}[remember picture,overlay]
-      % Background image
-      % \node[anchor=north west,inner sep=0pt] at (0,0)
-      %      {\includegraphics[width=\paperwidth]{background}};
-      % Chapter heading
-      \draw[anchor=west, inner sep=0pt] (-0.1cm,-1.5cm) node
-           [black,
-            ultra thick,
-            fill=tsorange!10,
-            fill opacity=.6,
-            inner sep=10pt]
-           (0,0)
-           {\parbox[t][1.6cm][t]{\paperwidth}
-           {\huge\bfseries\sffamily\flushleft\thechapter. #1}};
-    \end{tikzpicture}
-  };
-\end{tikzpicture}
-\vspace{7.5cm}  % TODO:修改
-}
+      \node at (current page.north west)
+        {
+          \begin{tikzpicture}[remember picture,overlay]
+            \draw[fill=lbdeepblue,draw opacity=0]
+              ++(0,-2cm) rectangle ++(\paperwidth,-4pt);
+            \node[color=lbdeepgreen,inner sep=12pt,below left] (chapter)
+              at  +(\paperwidth-1.2cm,-2cm) {\fontsize{40pt}{1pt}\selectfont\pplj\thechapter};
+            \draw[line width=2pt,color=lbgreen] 
+              ++(\paperwidth-1.2cm,0) |- ($(chapter.south west)+(0,4pt)$);
+            \node[color=lbdeepblue,left,outer sep=2pt] at (chapter.south west)
+              {
+                \parbox[c][][c]{10cm}
+                {\flushright\Huge\ppl #2}
+              };
 
+            % 预留设计,图片或者导言
+            \node[below right,inner sep=12pt] (text) at ++(2cm,-5cm)
+              {
+                \parbox[c][][c]{5.5cm}
+                {\small\ppl #1}
+              };
+            \draw[line width=2pt,color=lbgreen]
+              ++(2cm,-2cm-4pt) |- (text.south east);
+            %
+
+          \end{tikzpicture}
+        };
+    \end{tikzpicture}
+    \vspace{7cm}
+  }{
+    \begin{tikzpicture}[remember picture,overlay]
+      \node at (current page.north west)
+        {
+          \begin{tikzpicture}[remember picture,overlay]
+            \draw[fill=lbdeepblue,draw opacity=0]
+              ++(0,-2cm) rectangle ++(\paperwidth,-4pt);
+            \node[color=lbdeepgreen,inner sep=12pt,below right] (chapter)
+              at  +(1.2cm,-2cm) {\fontsize{40pt}{1pt}\selectfont\pplj\thechapter};
+            \draw[line width=2pt,color=lbgreen] 
+              ++(1.2cm,0) |- ($(chapter.south east)+(0,4pt)$);
+            \node[color=lbdeepblue,right,outer sep=2pt] at (chapter.south east)
+              {
+                \parbox[c][][c]{10cm}
+                {\flushleft\Huge\ppl #2}
+              };
+
+            % 预留设计,图片或者导言
+            \node[below left,inner sep=12pt] (text) at ++(\paperwidth-2cm,-5cm)
+              {
+                \parbox[c][][c]{5.5cm}
+                {\small\ppl #1}
+              };
+            \draw[line width=2pt,color=lbgreen]
+              ++(\paperwidth-2cm,-2cm-4pt) |- (text.south west);
+            %
+
+          \end{tikzpicture}
+        };
+    \end{tikzpicture}
+    \vspace{7cm}
+  }
+}
 
 % Unnumbered chapters
 \renewcommand{\@makeschapterhead}[1]{
-  \begin{tikzpicture}[remember picture,overlay]
-    \node at (current page.north west)
-      {
-        \begin{tikzpicture}[remember picture,overlay]
-          \draw[fill=lbdeepblue,draw opacity=0]
-            ++(0,-2cm) rectangle ++(\paperwidth,-4pt);
-          \node[color=lbdeepblue,inner sep=12pt,below right] (text)
-            at  +(6.1cm,-2cm) {\Huge\ppl #1};
-          \draw[line width=2pt,color=lbgreen]
-            ++(6.1cm,0) |- ($(text.south east)+(0,4pt)$); 
-        \end{tikzpicture}
-      };
-  \end{tikzpicture}
-\vspace{2cm}
+  \checkoddpage
+  \@ifoddpage{
+    \begin{tikzpicture}[remember picture,overlay]
+      \node at (current page.north west)
+        {
+          \begin{tikzpicture}[remember picture,overlay]
+            \draw[fill=lbdeepblue,draw opacity=0]
+              ++(0,-2cm) rectangle ++(\paperwidth,-4pt);
+            \node[color=lbdeepblue,inner sep=12pt,below left] (text)
+              at  +(\paperwidth-6.1cm,-2cm) {\Huge\ppl #1};
+            \draw[line width=2pt,color=lbgreen]
+              ++(\paperwidth-6.1cm,0) |- ($(text.south west)+(0,4pt)$); 
+          \end{tikzpicture}
+        };
+    \end{tikzpicture}
+    \vspace{2cm}
+  }{
+    \begin{tikzpicture}[remember picture,overlay]
+      \node at (current page.north west)
+        {
+          \begin{tikzpicture}[remember picture,overlay]
+            \draw[fill=lbdeepblue,draw opacity=0]
+              ++(0,-2cm) rectangle ++(\paperwidth,-4pt);
+            \node[color=lbdeepblue,inner sep=12pt,below right] (text)
+              at  +(6.1cm,-2cm) {\Huge\ppl #1};
+            \draw[line width=2pt,color=lbgreen]
+              ++(6.1cm,0) |- ($(text.south east)+(0,4pt)$); 
+          \end{tikzpicture}
+        };
+    \end{tikzpicture}
+    \vspace{2cm}
+  }
 }
 
 % Table of contents styling
@@ -229,7 +283,7 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
 % Title page
 \newgeometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
 
-\BgThispage % setting the background
+% \BgThispage % setting the background
 \begin{center}
   \null
   \smallskip
@@ -252,10 +306,6 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
 \pagebreak
 
 \pagenumbering{roman}
-
-% First page
-
-% TODO
 
 % Copyright page
 \null
@@ -284,19 +334,20 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
 \savegeometry{beforepreface}
 
 % Table of contents
-\newgeometry{twoside=false,
-            includemp=true,
-            reversemp=true,
-            left=2cm,right=1.2cm,
-            top=2cm,bottom=1.5cm,
-            headsep=0.7cm,headheight=0.5cm,
-            marginparsep=0.4cm,marginparwidth=4.5cm}     
+% \newgeometry{twoside=false,
+%             includemp=true,
+%             reversemp=true,
+%             left=2cm,right=1.2cm,
+%             top=2cm,bottom=1.5cm,
+%             headsep=0.7cm,headheight=0.5cm,
+%             marginparsep=0.4cm,marginparwidth=4.5cm} 
+\restoregeometry
 
 \tableofcontents
 
 % Preface (and others)  TODO:重新设计宏命令
 {\chapter*{Preface}
-textsc  % TODO:重新设计
+\noindent textsc  % TODO:重新设计
 }
 \restoregeometry
 
