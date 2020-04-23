@@ -33,6 +33,7 @@
 
 \LoadClass[onecolumn,titlepage,twoside,openany]{book}
 
+
 % Language and Fonts
 %--------------------------------------------------------------------------
 \RequirePackage[american]{babel}
@@ -63,6 +64,16 @@
 
 \newcommand{\ppl}{\fontencoding{OT1}\fontfamily{ppl}\fontseries{m}\selectfont}
 \newcommand{\pplj}{\fontencoding{OT1}\fontfamily{pplj}\fontseries{m}\selectfont}
+
+
+% Line space
+%--------------------------------------------------------------------------
+\ifbool{CJK}{
+  % \RequirePackage{setspace}
+  \linespread{1.25}
+  % TODO 题注和表注的字体、大小、行距
+  % \renewcommand{\captionfont}{\linespread{1}\normalsize}
+}
 
 
 % Hyperref
@@ -140,8 +151,9 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
 
 % Chapter styling
 %--------------------------------------------------------------------------
-\makeatletter
 \RequirePackage{ifoddpage}
+\makeatletter
+
 
 % Numbered chapters
 \renewcommand{\@makechapterhead}[2][Summary]{
@@ -247,6 +259,7 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
   }
 }
 
+
 % Table of contents styling
 %--------------------------------------------------------------------------
 \RequirePackage{titletoc}
@@ -262,6 +275,7 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
 {\addvspace{6pt}\sffamily\bfseries}
 {\contentslabel[\thecontentslabel]{1.25cm}}{}
 {\sffamily\hfill\color{black}\thecontentspage}[]
+
 
 % Front matter
 %--------------------------------------------------------------------------
@@ -356,6 +370,7 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
 \thispagestyle{empty}
 }
 
+
 % Boxes for theorems
 %--------------------------------------------------------------------------
 \newenvironment{boxtheorem}
@@ -395,6 +410,7 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
  colback=tsgrey!20,boxrule=0pt,frame hidden]}
 {\end{tcolorbox}}
 
+
 % Styling of theorems
 %--------------------------------------------------------------------------
 \RequirePackage{amsthm}
@@ -427,6 +443,7 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
 \newtheorem{envproblem}{Problem}[chapter]
 \newtheorem{envprogramming}{Computer exercise}[chapter]
 \newtheorem{envexample}{Exempel}[chapter]
+
 
 % Environments for theorems
 %--------------------------------------------------------------------------
@@ -462,6 +479,7 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
                {\begin{boxexample}\begin{envexample}}
                {\end{envexample}\end{boxexample}}
 
+
 % Other environments
 %--------------------------------------------------------------------------
 \newenvironment{summary}
@@ -475,6 +493,7 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
  \marginpar{\vspace{-3mm}\includegraphics[width=1.0cm]{idea}}}
 {\vspace{0.5cm}}
 
+
 % Bibliography
 %--------------------------------------------------------------------------
 \RequirePackage[backend=biber,style=authoryear]{biblatex}
@@ -483,10 +502,12 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
 
 \addbibresource{bibliography.bib}
 
+
 % Index
 %--------------------------------------------------------------------------
 \RequirePackage{makeidx}
 \makeindex
+
 
 % Packages for mathematics and algorithms
 %--------------------------------------------------------------------------
@@ -500,6 +521,7 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
 \RequirePackage{bm}
 \RequirePackage{amsmath}
 \RequirePackage{amssymb}
+
 
 % Other useful packages
 %--------------------------------------------------------------------------
