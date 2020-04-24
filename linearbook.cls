@@ -66,11 +66,14 @@
 \newcommand{\pplj}{\fontencoding{OT1}\fontfamily{pplj}\fontseries{m}\selectfont}
 
 
-% Line space
+% Chinese line space
 %--------------------------------------------------------------------------
 \ifbool{CJK}{
   % \RequirePackage{setspace}
+  \RequirePackage{indentfirst}
+  \setlength\parindent{2em}
   \linespread{1.25}
+
   % TODO 题注和表注的字体、大小、行距
   % \renewcommand{\captionfont}{\linespread{1}\normalsize}
 }
@@ -154,6 +157,9 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
 \RequirePackage{ifoddpage}
 \makeatletter
 
+% Cut-off line
+% \newcommand{\lb\line}{\tikz[remember picture,overlay] \draw[fill=lbdeepblue,draw opacity=0]
+% (current page.north west)++(0,-2cm) rectangle ++(\paperwidth,-4pt);}
 
 % Numbered chapters
 \renewcommand{\@makechapterhead}[2][Summary]{
