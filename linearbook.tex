@@ -21,6 +21,24 @@
 
 我的第一个结果，是博士第一年的暑假开始做的，其实我是很幸运的，当时国内有位老师在我老板这里访问，这位老师非常热心并且耐心地教了我很多细节性的东西，让我能够快速上手做问题。很多细节性的东西，往往是需要对一个领域非常熟稔之后才能体悟到的，对于一个低年级的Phd来说，这时有人带着的话比自己看论文去学是省不少时间的，我真的很感激！
 
+控制多图行距,临时改变行距.
+
+\begin{figure}
+  \begin{subfigure}[b]{.3\linewidth}
+  \centering\large A
+  \caption{A subfigure}\label{fig:1a}
+  \end{subfigure}%
+  \begin{subfigure}[b]{.3\linewidth}
+  \centering\large B
+  \caption{Another subfigure}\label{fig:1b}
+  \end{subfigure} \quad
+  \subcaptionbox[b]{A cat\label{cat}}
+  [.3\linewidth]{\centering\large C}
+
+  \caption{A figure}\label{fig:1}
+\end{figure}
+
+
 那个暑假我们做出了一个我们觉着很漂亮的结果，然后我就开始动手写了。写的过程，花费了很大的精力，毕竟是自己读Phd之后第一篇正儿八经的文章，中间就来来回回地思考怎么合理地安排证明结构，让证明能非常简洁漂亮，包括中间不断地修正证明里面的各种小漏洞。
 
 因为我当时刚第二年，课业的压力还不小，博士是要求学一些本专业不是你研究方向的课，但因为我本科时并没有多少计算机基础，所以我上那些需要编程之类的课还是很耗精力的。加上当时我还做着助教，所以几乎都是挤时间在敲论文。

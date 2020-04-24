@@ -66,16 +66,29 @@
 \newcommand{\pplj}{\fontencoding{OT1}\fontfamily{pplj}\fontseries{m}\selectfont}
 
 
-% Chinese line space
+% Figure and table caption styling
+%--------------------------------------------------------------------------
+\RequirePackage[font=small,
+                labelsep=space,
+                labelfont={sf},
+                position=bottom,
+                ]{caption}
+\RequirePackage[labelfont={rm}]{subcaption}
+\renewcommand{\thesubfigure}{\alph{subfigure}}
+\RequirePackage{setspace}
+
+
+% Chinese type setting
 %--------------------------------------------------------------------------
 \ifbool{CJK}{
-  % \RequirePackage{setspace}
+  % 缩进
   \RequirePackage{indentfirst}
   \setlength\parindent{2em}
+  % 行距
   \linespread{1.25}
-
-  % TODO 题注和表注的字体、大小、行距
-  % \renewcommand{\captionfont}{\linespread{1}\normalsize}
+  % 表注和图注
+  \captionsetup[figure]{name=图}
+  \captionsetup[table]{name=表}
 }
 
 
