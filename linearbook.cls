@@ -22,6 +22,7 @@
 % Bool Values
 % \RequirePackage{xparse}
 \RequirePackage{etoolbox}
+
 \newbool{CJK} 
 \newbool{Palatino}
 
@@ -39,9 +40,9 @@
 \RequirePackage[american]{babel}
 \RequirePackage[utf8]{inputenc}
 \RequirePackage[OT1,T1]{fontenc}
-\ifbool{Palatino}{%
+\ifbool{Palatino}{
   \RequirePackage{mathpazo}
-}{%
+}{
   \RequirePackage{times}
 }
 \ifbool{CJK}{%
@@ -103,8 +104,10 @@
 \RequirePackage[includemp=true,
                 inner=2cm,outer=1.2cm,
                 top=2cm,bottom=1.5cm,
-                headsep=0.7cm,headheight=0.5cm,
-                marginparsep=0.4cm,marginparwidth=4.5cm]{geometry}           
+                headsep=0.6cm,headheight=0.4cm,
+                marginparsep=0.4cm,marginparwidth=4.5cm,
+                showframe                           % for design
+                ]{geometry}           
 
 
 % Colors
@@ -116,6 +119,7 @@
 \definecolor{lbdeepgreen}{HTML}{457d3a}
 \definecolor{lbgreen}{HTML}{c7d9b2}
 \definecolor{lbred}{HTML}{a3262c}
+\definecolor{lbyellow}{HTML}{ce8340}
 
 \definecolor{tssteelblue}{RGB}{70,130,180}
 \definecolor{tsorange}{RGB}{255,138,88}
@@ -125,7 +129,7 @@
 \definecolor{tsgrey}{RGB}{200,200,200}
 
 
-% Graphics
+% Graphics and drawing
 %--------------------------------------------------------------------------
 \RequirePackage{graphicx}
 \graphicspath{{images/}}
@@ -162,7 +166,7 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
 % Section styling
 %--------------------------------------------------------------------------
 \RequirePackage{sectsty}
-\sectionfont{\sf\color{tssteelblue}\sectionrule{0ex}{0pt}{-1ex}{1pt}}
+\sectionfont{\sf\color{lbgrayblue}\sectionrule{0ex}{0pt}{-1ex}{1pt}}
 
 
 % Chapter styling
@@ -194,7 +198,7 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
                 {\flushright\Huge\ppl #2}
               };
 
-            % 预留设计,图片或者导言
+            % 预留设计,图片或者导言;取消设计需要更改参数
             \node[below right,inner sep=12pt] (text) at ++(2cm,-5cm)
               {
                 \parbox[c][][c]{5.5cm}
@@ -225,7 +229,7 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
                 {\flushleft\Huge\ppl #2}
               };
 
-            % 预留设计,图片或者导言
+            % 预留设计,图片或者导言;取消设计需要更改参数
             \node[below left,inner sep=12pt] (text) at ++(\paperwidth-2cm,-5cm)
               {
                 \parbox[c][][c]{5.5cm}
@@ -316,7 +320,7 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
 % Title page
 \newgeometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
 
-% \BgThispage % setting the background
+% \BgThispage % setting the background TODO 可选选项
 \begin{center}
   \null
   \smallskip
@@ -367,13 +371,6 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
 \savegeometry{beforepreface}
 
 % Table of contents
-% \newgeometry{twoside=false,
-%             includemp=true,
-%             reversemp=true,
-%             left=2cm,right=1.2cm,
-%             top=2cm,bottom=1.5cm,
-%             headsep=0.7cm,headheight=0.5cm,
-%             marginparsep=0.4cm,marginparwidth=4.5cm} 
 \restoregeometry
 
 \tableofcontents
