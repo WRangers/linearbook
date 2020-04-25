@@ -101,12 +101,15 @@
 
 % Main Geometry
 %--------------------------------------------------------------------------
-\RequirePackage[includemp=true,
+\RequirePackage[papersize={20.32cm,25.4cm},
+                includemp=true,
                 inner=2cm,outer=1.2cm,
                 top=2cm,bottom=1.5cm,
-                headsep=0.6cm,headheight=0.4cm,
+                headsep=0.5cm,headheight=0.5cm,
+                footskip=0.7cm,
                 marginparsep=0.4cm,marginparwidth=4.5cm,
-                showframe                           % for design
+                showframe,                           % for design
+                % showcrop                             % for design
                 ]{geometry}           
 
 
@@ -154,13 +157,34 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
 % Header and footer styling
 %--------------------------------------------------------------------------
 \RequirePackage{fancyhdr}
-\setlength{\headheight}{15.0pt}
-\fancyhf{}
-\fancyhead[LE,RO]{\bfseries\thepage}
-\fancyhead[RE]{\it\sf\nouppercase{\rightmark}}
-\fancyhead[LO]{\it\sf\nouppercase{\leftmark}}
-\renewcommand{\headrulewidth}{0pt}
-\renewcommand{\footrulewidth}{0pt}
+\addtolength{\headwidth}{\marginparsep}
+\addtolength{\headwidth}{\marginparwidth}
+\fancypagestyle{content}{
+  \renewcommand{\sectionmark}[1]{\markright{\thesection\ \ ##1}}
+  \renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{%  TODO 大写失效了
+    \chaptername}\ \thechapter \ \ ##1}{}}
+  \fancyhf{}
+  \fancyhead[LE]{\thepage \quad \nouppercase{\leftmark}}
+  \fancyhead[RO]{\nouppercase{\rightmark} \quad \thepage}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+\fancypagestyle{non-content-O}{
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0pt}
+  \fancyfoot[R]{\thepage}
+}
+\fancypagestyle{non-content-E}{
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0pt}
+  \fancyfoot[L]{\thepage}
+}
+% \fancyhf{}                            % clear all header and footer fields
+% \renewcommand{\sectionmark}[1]{\markright{{\sf\thesection}\ #1}}
+% \fancyhead[LE]{\thepage \quad \nouppercase{\leftmark}}
+% \fancyhead[RO]{\nouppercase{\rightmark} \quad \thepage}
+% \renewcommand{\headrulewidth}{0pt}
+% \renewcommand{\footrulewidth}{0pt}
 
 
 % Section styling
@@ -212,6 +236,8 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
         };
     \end{tikzpicture}
     \vspace{7cm}
+    % Page number styling
+    \thispagestyle{non-content-O}
   }{
     \begin{tikzpicture}[remember picture,overlay]
       \node at (current page.north west)
@@ -243,6 +269,8 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
         };
     \end{tikzpicture}
     \vspace{7cm}
+    % Page number styling
+    \thispagestyle{non-content-E}
   }
 }
 
@@ -264,6 +292,8 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
         };
     \end{tikzpicture}
     \vspace{2cm}
+    % Page number styling
+    \thispagestyle{non-content-O}
   }{
     \begin{tikzpicture}[remember picture,overlay]
       \node at (current page.north west)
@@ -279,6 +309,8 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
         };
     \end{tikzpicture}
     \vspace{2cm}
+    % Page number styling
+    \thispagestyle{non-content-E}
   }
 }
 
@@ -304,7 +336,8 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
 %--------------------------------------------------------------------------
 \newcommand{\tsbook}[9]{    % TODO 把这里的命令改掉ts改掉
 
-\pagestyle{empty}
+\frontmatter
+\newgeometry{left=1.2cm,right=1.2cm,top=2cm,bottom=2cm}
 
 \def\@tstitle{#1}
 \def\@tsauthor{#2}
@@ -316,16 +349,17 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
 \def\@tspublished{#8}
 \def\@tsprinted{#9}
 
+% Cover
+% \BgThispage % setting the background TODO 可选选项
 
 % Title page
-\newgeometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+\pagestyle{empty}
 
-% \BgThispage % setting the background TODO 可选选项
 \begin{center}
   \null
   \smallskip
 
-  \color{white}
+  \color{black}
   \sffamily
 
   \Huge
@@ -340,9 +374,7 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
   \textsc{\@tspublished}
 \end{center}
 
-\pagebreak
-
-\pagenumbering{roman}
+\clearpage
 
 % Copyright page
 \null
@@ -368,22 +400,25 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
   Printed in \@tsprinted
 \end{flushleft}
 
-\savegeometry{beforepreface}
+\clearpage
+% \savegeometry{beforepreface} TODO 视情况删除
 
 % Table of contents
 \restoregeometry
-
 \tableofcontents
+\pagestyle{content}
 
 % Preface (and others)  TODO:重新设计宏命令
 {\chapter*{Preface}
 \noindent textsc  % TODO:重新设计
 }
-\restoregeometry
+
+
 
 \cleardoublepage
-\pagestyle{fancy}
 \thispagestyle{empty}
+
+\mainmatter
 }
 
 
