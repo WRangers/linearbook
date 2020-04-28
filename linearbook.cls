@@ -86,7 +86,7 @@
   \RequirePackage{indentfirst}
   \setlength\parindent{2em}
   % 行距
-  \linespread{1.25}
+  \linespread{1.25}            
   % 表注和图注
   \captionsetup[figure]{name=图}
   \captionsetup[table]{name=表}
@@ -149,6 +149,7 @@
 \pgfplotsset{compat=1.17}
 \usepgfplotslibrary{external}
 
+% Background
 \RequirePackage[pages=some]{background}
 \backgroundsetup{scale=1,color=black,opacity=1.0,angle=0,
 contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
@@ -196,6 +197,7 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
 % Chapter styling
 %--------------------------------------------------------------------------
 \RequirePackage{ifoddpage}
+
 \makeatletter
 
 % Cut-off line
