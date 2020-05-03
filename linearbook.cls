@@ -174,18 +174,16 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
   \fancyhf{}
   \renewcommand{\headrulewidth}{0pt}
   \fancyfoot[R]{\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
 }
 \fancypagestyle{non-content-E}{
   \fancyhf{}
   \renewcommand{\headrulewidth}{0pt}
   \fancyfoot[L]{\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
 }
-% \fancyhf{}                            % clear all header and footer fields
-% \renewcommand{\sectionmark}[1]{\markright{{\sf\thesection}\ #1}}
-% \fancyhead[LE]{\thepage \quad \nouppercase{\leftmark}}
-% \fancyhead[RO]{\nouppercase{\rightmark} \quad \thepage}
-% \renewcommand{\headrulewidth}{0pt}
-% \renewcommand{\footrulewidth}{0pt}
 
 
 % Section styling
