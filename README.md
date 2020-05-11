@@ -1,2 +1,2 @@
-# linearbook
+# LinearBook
 A LaTex textbook template.
