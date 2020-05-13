@@ -188,8 +188,18 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
 
 % Section styling
 %--------------------------------------------------------------------------
-\RequirePackage{sectsty}
-\sectionfont{\sf\color{lbgrayblue}\sectionrule{0ex}{0pt}{-1ex}{1pt}}
+\RequirePackage{titlesec}
+\titleformat{\section}%
+  {\normalfont\Large\color{tssteelblue}}% format applied to label+text
+  {
+    \begin{tikzpicture}
+      \draw (0,0) --(7,0);
+    \end{tikzpicture}
+  }% label
+  % {\llap{\colorbox{orange}{\parbox{1.5cm}{\hfill\color{white}\thesection}}}}% label
+  {1em}% horizontal separation between label and title body
+  {}% before the title body
+  []% after the title body
 
 
 % Chapter styling
