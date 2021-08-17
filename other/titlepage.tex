@@ -1,0 +1,52 @@
+\newpage
+\newgeometry{includemp=true,
+             inner=2cm,outer=2cm,
+             top=2cm,bottom=1.5cm,
+             headsep=0.5cm,headheight=0.5cm,
+             footskip=0.7cm,
+             marginparsep=0cm,marginparwidth=0cm}
+\thispagestyle{empty}
+\bookmark[page=3, level=1]{扉页}
+
+\begin{tikzpicture}[remember picture,overlay]
+    \node at (current page.north west)
+      {
+        \begin{tikzpicture}[remember picture,overlay]
+          \draw[fill=lbdeepblue,draw opacity=0]
+            ++(0,-2cm) rectangle ++(\paperwidth,-4pt);
+          \node[color=lbdeepblue] (text)
+            at  (0.35\paperwidth,-0.25\paperheight)
+            {\titlefont\fontsize{60}{60}\selectfont  矩阵分析};
+          \node[color=lbdeepblue,above right] at ($(text.east)+(0em,-0.5em)$)
+          {\titlefont\fontsize{30}{40}\selectfont 可视化方法};
+          \node[color=lbgreen,below right] (V) at ($(text.east)+(0.2em,-1em)$) {\fontsize{15}{25}\selectfont{Visual Matrix\, {$\symscr{A}$}nalysis}};
+          \draw[line width=2pt,color=lbgreen] 
+            ++(2cm,-2cm) |- ($(V.south east)+(0,-1cm)$);
+        \end{tikzpicture}
+      };
+\end{tikzpicture}
+
+\vspace*{10cm}
+
+\hspace{0.5em}\begin{minipage}{0.9\linewidth}
+  \zihao{-2}
+
+  \textit{A Sample of} \LBK : \texttt{linearbook.cls}. 
+  
+  \vspace{2cm}
+
+  \textit{\zihao{-3} Designed by}
+  
+  J.Wang
+\end{minipage}
+
+\vfill
+\begin{center}
+  \zihao{4}
+  \titlefont
+
+  还\;不\;知\;道\;哪\;个\;出\;版\;社
+
+  北\quad 京
+\end{center}
+\restoregeometry

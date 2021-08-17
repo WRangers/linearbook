@@ -1,0 +1,123 @@
+\RequirePackage{fix-cm}
+\documentclass[10pt]{article}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{arrows,shapes.arrows}
+
+\usepackage[scale=1,,width=8in,height=10in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{inputenc}
+\usepackage[no-math]{fontspec}
+\usepackage{indentfirst}
+\setlength\parindent{2em}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage[math-style=TeX,
+            bold-style=ISO]{unicode-math}
+\setmathfont{XITS Math}
+\setmathfont{XITS Math Bold}[version=bold]
+\usepackage[bb=ams,
+            scr=rsfs]{mathalpha}
+\everymath{\displaystyle}
+\allowdisplaybreaks[4]
+\DeclareSymbolFont{largesymbols}{OMX}{cmex}{m}{n}
+\DeclareMathSymbol{\msum}{\mathop}{largesymbols}{"50}
+\DeclareSymbolFont{letters}{OML}{cmm}{m}{it}
+\DeclareMathSymbol{\mpi}{\mathord}{letters}{"19}
+\renewcommand{\boldsymbol}{\symbf}
+\renewcommand{\mathscr}{\symscr}
+\usepackage{ctex}
+\xeCJKsetup{PlainEquation=true}
+\xeCJKsetup{CJKmath=true}
+\xeCJKsetup{EmboldenFactor=2.5}
+\newcommand{\lbtitlefont}{\CJKfontspec[AutoFakeBold=true]{方正清刻本悦宋简体}}
+\setmainfont{XITS}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\definecolor{coverbgcolor}{RGB}{138,1,1}
+\pagecolor{coverbgcolor}
+
+\begin{document}
+\let\pi\mpi
+\let\sum\msum
+
+\pagestyle{empty}
+\fancyhf{}
+%% 封面背景数学公式模糊
+%  本质上是做一个阴影投影
+\pgfmathsetmacro{\shadowangle}{180}        % 阴影角度
+\newlength{\shadowdistance}                
+\pgfmathsetlength{\shadowdistance}{0pt}    % 距离
+\pgfmathsetmacro{\shadowopacity}{0.7}      % 透明度
+\pgfmathtruncatemacro{\totshadow}{100}     % 透明度总数
+\pgfmathsetmacro{\shadowspread}{0.04}      % 扩散程度
+\pgfmathsetmacro{\shadowsize}{0.1}         % 阴影大小
+\newcommand{\blurnode}[2]{                 % \blurnode{字号}{内容}
+    \path[opacity={\shadowopacity/\totshadow},shift={({\shadowangle-180}:\shadowdistance)},scale={1+\shadowsize}]
+    foreach \nshadow [evaluate=\nshadow as \angshadow using \nshadow/\totshadow*360] in {1,...,\totshadow}{
+    node[above right,inner sep=0pt,outer sep=0pt] at (\angshadow:\shadowspread) {
+        \color{white}\fontsize{#1}{#1}\selectfont #2}};
+}
+%%
+\begin{tikzpicture}[overlay,remember picture]
+    \draw[coverbgcolor!50,opacity=0.7,step=5mm] (current page.north west) grid (\paperwidth,-\paperheight);
+    \draw[coverbgcolor] (0.45\paperwidth,-0.5\paperheight) node {\fontsize{650}{25}\selectfont $\symscr{A}$};
+    \draw[white] (0.78\paperwidth,-0.4\paperheight) node[align=center] (M) {
+        \fontsize{20}{25}\selectfont{\lbtitlefont 可视化方法}\\
+        \fontsize{10}{25}\selectfont{Visual Matrix\, {$\symscr{A}$}nalysis}
+        % \hspace{4.5em}\zihao{3} J. Wang
+        };
+    \draw[white] (M.west) node[left] {\fontsize{40}{40}\selectfont{\lbtitlefont 矩阵分析}};
+    \begin{scope}[xshift=0.5\paperwidth,yshift=-0.7\paperheight, ultra thick, opacity=0.5]
+        \draw[white,-Stealth] (0,-2)--(0,5);
+        \draw[white,-Stealth] (-2,0)--(8,0);
+        \draw[white] (0,2.5) circle (0.8);
+        \draw[white] (3,0) circle (1.2);
+        \draw[white] (5,0) circle (1.2);
+        \fill[white] (0,2.5) circle (3pt);
+        \fill[white] (3,0) circle (3pt);
+        \fill[white] (5,0) circle (3pt);
+    \end{scope}
+    \begin{scope}[xshift=0.045\paperwidth,yshift=-0.6\paperheight]
+        \blurnode{20}{
+            $
+            \boldsymbol{J}=\left[\begin{array}{llll}
+            \boldsymbol{J}_{1} & & & \\
+            & \boldsymbol{J}_{2} & & \\
+            & & \ddots & \\
+            & & & \boldsymbol{J}_{n}
+            \end{array}\right]
+            $
+        }
+    \end{scope}
+    \begin{scope}[xshift=0.045\paperwidth,yshift=-0.3\paperheight]
+        \blurnode{20}{
+            $
+            \mathrm{e}^{\symbf{A}}=\boldsymbol{I}+\boldsymbol{A}+\frac{\boldsymbol{A}^{2}}{2 !}+\cdots+\frac{\boldsymbol{A}^{k}}{k !}+\cdots
+            $
+        }
+    \end{scope}
+    \begin{scope}[xshift=0.5\paperwidth,yshift=-0.2\paperheight]
+        \blurnode{20}{
+            $
+            \begin{aligned}
+                \sin \boldsymbol{A}    & =\msum_{k=0}^{+\infty}(-1)^{k} \frac{\boldsymbol{A}^{2 k+1}}{(2 k+1) !} \\
+                \cos \boldsymbol{A}    & =\msum_{k=0}^{+\infty}(-1)^{k} \frac{\boldsymbol{A}^{2 k}}{(2 k) !}
+            \end{aligned}
+            $
+        }
+    \end{scope}
+    \begin{scope}[xshift=0.005\paperwidth,yshift=-0.9\paperheight]
+        \blurnode{20}{
+            $
+            \begin{aligned}
+                \varphi_{k}(x)= & \frac{\varphi_{\symbf{A}}(x)}{\left(x-\lambda_{k}\right)^{d_{k}}}\\
+                              = & \left(x-\lambda_{1}\right)^{d_{1}} \cdots\left(x-\lambda_{k-1}\right)^{d_{k-1}} \cdot\left(x-\lambda_{k+1}\right)^{d_{k+1}} \ldots\left(x-\lambda_{s}\right)^{d_{s}} 
+            \end{aligned}
+            $
+        }
+    \end{scope}
+\end{tikzpicture}
+\end{document}
+

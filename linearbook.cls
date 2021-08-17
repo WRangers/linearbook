@@ -1,5 +1,8 @@
-%% tstextbook.cls
-%% Copyright 2016 Typesetters.se
+%% linearbook.cls
+%% Copyright 2021 J. Wang
+% version 2021/05/01
+%
+%% Original Copyright 2016 Typesetters.se
 %
 % This work may be distributed and/or modified under the
 % conditions of the LaTeX Project Public License, either version 1.3
@@ -14,94 +17,121 @@
 %--------------------------------------------------------------------------
 
 
-% Class Definition and Parameters
+% 文类定义和选项
 %--------------------------------------------------------------------------
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{linearbook}[2020/04/20 Free LaTeX text book template.]
+\ProvidesClass{linearbook}[2021/05/01 A free LaTeX text book template.]
 
-% Bool Values
-% \RequirePackage{xparse}
+\RequirePackage{xparse}
 \RequirePackage{etoolbox}
 
-\newbool{CJK} 
-\newbool{Palatino}
+% 选项
+\newbool{custom}            % 自定义中文字体
 
-\DeclareOption{cjk}{\booltrue{CJK}}
-\DeclareOption{palatino}{\booltrue{Palatino}}
+% 中文字体集选项(参考CTeX文档)
+\newcommand\@fontset{windows}
+\DeclareOption{adobe}{\renewcommand\@fontset{adobe}}      % Adobe字体
+\DeclareOption{ubuntu}{\renewcommand\@fontset{ubuntu}}    % Ubuntu字体
+\DeclareOption{mac}{\renewcommand\@fontset{mac}}          % Mac字体
+\DeclareOption{windows}{\renewcommand\@fontset{windows}}  % Windows字体
+\DeclareOption{fandol}{\renewcommand\@fontset{fandol}}    % Fandol字体
+\DeclareOption{custom}{\booltrue{custom}\renewcommand\@fontset{none}}  % 自定义
+
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{book}}
-
 \ProcessOptions\relax
 
-\LoadClass[onecolumn,titlepage,twoside,openany]{book}
+\LoadClass[onecolumn,twoside,openany]{book}
 
-
-% Language and Fonts
+% 语言和字体设置
 %--------------------------------------------------------------------------
+% 基本宏包
 \RequirePackage[american]{babel}
-\RequirePackage[utf8]{inputenc}
+
 \RequirePackage[OT1,T1]{fontenc}
-\ifbool{Palatino}{
-  \RequirePackage{mathpazo}
-}{
-  \RequirePackage{times}
+\RequirePackage{inputenc}
+
+% 数学符号
+\RequirePackage{amsmath,amsfonts,amssymb,amsthm}
+\RequirePackage{extarrows}                          % 特殊箭头
+\usepackage[bb=ams,
+            frak=boondox,
+            scr=boondox,
+            cal=pxtx]{mathalpha}
+
+\everymath{\displaystyle}		% 数学公式均为display模式
+\allowdisplaybreaks[4]			% 数学公式允许跨页
+
+
+% 数学字体
+%-------------------------------------
+\RequirePackage[no-math]{fontspec}
+\RequirePackage[math-style=TeX,
+                bold-style=ISO]{unicode-math}       % 数学unicode-math宏包
+\setmathfont{XITS Math}                             % 数学字体设置为XITS Math
+\setmathfont{XITS Math Bold}[version=bold]
+
+% 重设\sum符号
+\DeclareSymbolFont{largesymbols}{OMX}{cmex}{m}{n}
+\DeclareMathSymbol{\msum}{\mathop}{largesymbols}{"50}
+% 重设\pi符号
+\DeclareSymbolFont{letters}{OML}{cmm}{m}{it}
+\DeclareMathSymbol{\mpi}{\mathord}{letters}{"19}
+% 更新符号命令
+\renewcommand{\boldsymbol}{\symbf}
+
+% 字号
+\newcommand\@lbfontsize{5}
+
+% 配置字体
+\RequirePackage[scheme = chinese,
+                fontset=\@fontset,
+                zihao=\@lbfontsize,
+                linespread=1.25,
+                heading = true]{ctex}
+\ctexset{autoindent=2\ccwd}
+
+\xeCJKsetup{PlainEquation=true}    % 使用$$...$$来输入行间公式   
+\xeCJKsetup{CJKmath=true}          % 在数学环境中输出CJK字符  
+\xeCJKsetup{EmboldenFactor=2}      % 伪加粗程度
+\xeCJKsetup{CheckSingle=true}      % 避免孤字成行
+
+% 自定义字体
+\ifbool{custom}{
+  % 中文字体
+  \setCJKmainfont[ItalicFont={方正楷体简体}]{Noto Serif CJK SC}
+  \setCJKmonofont{方正仿宋_GBK.ttf}
+  \setCJKsansfont[AutoFakeBold=true]{方正黑体_GBK}
+  % 英文字体
+  \setmainfont{XITS}
+  \setmonofont{Courier New}
+  \setsansfont{Arial}
 }
-\ifbool{CJK}{%
-  \RequirePackage{xeCJK}
-  \setCJKmainfont[ItalicFont={楷体}]{Noto Serif CJK SC}
-                                                  % 正体为思源宋体,斜体为楷体
-  \setCJKmonofont{Courier}
-  \setCJKsansfont{黑体}
-  \setmainfont{Palatino-Roman}
-  % \setmonofont{}
-  % \setsansfont{}
-  \newCJKfontfamily[kx]\kxzdt{TypeLand KhangXi Dict Demo}
-                                                  % 康熙字典體                                                  
-  % \xeCJKsetup{CJKmath=true}                       % 在数学环境中输出CJK字符                                                  
-  \xeCJKsetup{CheckSingle=true}                   % 避免最后一个字单独成行                                                
-  \xeCJKsetup{PlainEquation=true}                 % 使用$$...$$来输入行间公式   
-  \xeCJKsetup{PunctStyle=quanjiao}                % 设置中文标点符号为全角式
-  % 可以设置为'banjiao'(半角),'kaiming'(开明)                         
-}
-
-\newcommand{\ppl}{\fontencoding{OT1}\fontfamily{ppl}\fontseries{m}\selectfont}
-\newcommand{\pplj}{\fontencoding{OT1}\fontfamily{pplj}\fontseries{m}\selectfont}
 
 
-% Figure and table caption styling
+% 插图和表格题注设置
 %--------------------------------------------------------------------------
 \RequirePackage[font=small,
-                labelsep=space,
-                labelfont={sf},
+                labelsep=quad,
+                % labelfont={sf},
                 position=bottom,
+                figurename={图},
+                tablename={表}
                 ]{caption}
 \RequirePackage[labelfont={rm}]{subcaption}
 \renewcommand{\thesubfigure}{\alph{subfigure}}
-\RequirePackage{setspace}
 
-
-% Chinese type setting
+% 交叉引用与书签
 %--------------------------------------------------------------------------
-\ifbool{CJK}{
-  % 缩进
-  \RequirePackage{indentfirst}
-  \setlength\parindent{2em}
-  % 行距
-  \linespread{1.25}            
-  % 表注和图注
-  \captionsetup[figure]{name=图}
-  \captionsetup[table]{name=表}
-}
+\RequirePackage{hyperref}     % 交叉引用
+\hypersetup{hidelinks,
+            colorlinks=true,
+            breaklinks=true}
+\RequirePackage{bookmark}     % 书签编号
+\bookmarksetup{numbered}
 
-
-% Hyperref
+% 页面和边距
 %--------------------------------------------------------------------------
-\RequirePackage[bookmarksnumbered]{hyperref}
-\hypersetup{hidelinks}
-
-
-% Main Geometry
-%--------------------------------------------------------------------------
-\RequirePackage[papersize={20.32cm,25.4cm},
+\RequirePackage[papersize={8in,10in},
                 includemp=true,
                 inner=2cm,outer=1.2cm,
                 top=2cm,bottom=1.5cm,
@@ -112,16 +142,19 @@
                 % showcrop                             % for design
                 ]{geometry}           
 
-
-% Colors
+% 配色
+% 定理等盒子的配色见"盒子环境"部分
 %--------------------------------------------------------------------------
+\RequirePackage{pagecolor}
 \RequirePackage{xcolor}
+\definecolor{coverbgcolor}{RGB}{138,1,1}      % 封面背景色
 \definecolor{lbdeepblue}{HTML}{118098}
 \definecolor{lbblue}{HTML}{00acef}
 \definecolor{lbgrayblue}{HTML}{bfd6db}
 \definecolor{lbdeepgreen}{HTML}{457d3a}
 \definecolor{lbgreen}{HTML}{c7d9b2}
 \definecolor{lbred}{HTML}{a3262c}
+\definecolor{lbdeepyellow}{HTML}{d18e50}
 \definecolor{lbyellow}{HTML}{ce8340}
 
 \definecolor{tssteelblue}{RGB}{70,130,180}
@@ -132,90 +165,83 @@
 \definecolor{tsgrey}{RGB}{200,200,200}
 
 
-% Graphics and drawing
+% 插图与绘图
 %--------------------------------------------------------------------------
 \RequirePackage{graphicx}
-\graphicspath{{images/}}
+\graphicspath{{figures/}}
 
 % Tikz
 \RequirePackage{tikz}
+\usetikzlibrary{datavisualization}
+\usetikzlibrary{intersections,angles,quotes}
+\usetikzlibrary {arrows.meta}
+\usetikzlibrary{datavisualization.formats.functions}
 \usetikzlibrary{calc}
+\usetikzlibrary{spy}
+\usetikzlibrary{patterns,shapes.arrows}
+\tikzset{marrow/.style={>={Stealth[round]},shorten >=1pt}}
 
 % Circuitikz
 \RequirePackage[siunitx,RPvoltages,european]{circuitikz}
 
 % Pgfplots
 \RequirePackage{pgfplots}
-\pgfplotsset{compat=1.17}
-\usepgfplotslibrary{external}
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{groupplots,dateplot}
+% \usepgfplotslibrary{external}
 
-% Background
-\RequirePackage[pages=some]{background}
-\backgroundsetup{scale=1,color=black,opacity=1.0,angle=0,
-contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
-
-
-% Header and footer styling
+% 背景
 %--------------------------------------------------------------------------
+\RequirePackage[pages=some]{background}
+\backgroundsetup{scale=1,color=black,opacity=1.0,angle=0,contents={}}
+
+% 页眉、页脚和页码
+%--------------------------------------------------------------------------
+\newcommand{\pplj}{\fontencoding{OT1}\fontfamily{pplj}\fontseries{m}\selectfont}
+
 \RequirePackage{fancyhdr}
+\RequirePackage{calc}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
 \addtolength{\headwidth}{\marginparsep}
 \addtolength{\headwidth}{\marginparwidth}
+\fancyheadoffset[roh,leh]{\marginparwidth + \marginparsep}
+\pagestyle{fancy}
+
+\renewcommand{\sectionmark}[1]{\markright{\thesection\quad #1}}%
+\renewcommand{\chaptermark}[1]{\markboth{第 \thechapter 章\quad #1}{}}
+
+\fancypagestyle{other}{
+  \fancyhf{}
+  \fancyhead[RO]{\small \headfont \leftmark \qquad \textbf{\pplj \roman{page}}}
+  \fancyhead[LE]{\small \headfont \textbf{\pplj \roman{page}} \qquad \leftmark}
+}
+
 \fancypagestyle{content}{
-  \renewcommand{\sectionmark}[1]{\markright{\thesection\ \ ##1}}
-  \renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{%  TODO 大写失效了
-    \chaptername}\ \thechapter \ \ ##1}{}}
   \fancyhf{}
-  \fancyhead[LE]{\thepage \quad \nouppercase{\leftmark}}
-  \fancyhead[RO]{\nouppercase{\rightmark} \quad \thepage}
-  \renewcommand{\headrulewidth}{0pt}
-  \renewcommand{\footrulewidth}{0pt}
-}
-\fancypagestyle{non-content-O}{
-  \fancyhf{}
-  \renewcommand{\headrulewidth}{0pt}
-  \fancyfoot[R]{\thepage}
-  \renewcommand{\headrulewidth}{0pt}
-  \renewcommand{\footrulewidth}{0pt}
-}
-\fancypagestyle{non-content-E}{
-  \fancyhf{}
-  \renewcommand{\headrulewidth}{0pt}
-  \fancyfoot[L]{\thepage}
-  \renewcommand{\headrulewidth}{0pt}
-  \renewcommand{\footrulewidth}{0pt}
+  \fancyhead[RO]{\small \headfont \rightmark \qquad \textbf{\pplj \thepage}}
+  \fancyhead[LE]{\small \headfont \textbf{\pplj \thepage} \qquad \leftmark}
 }
 
+\fancypagestyle{chapter-O}{
+  \fancyhf{}
+  \fancyfootoffset[r]{\marginparwidth + \marginparsep}
+  \fancyfoot[R]{\textbf{\pplj \thepage}}
+}
 
-% Section styling
-%--------------------------------------------------------------------------
-\RequirePackage{titlesec}
-\titleformat{\section}%
-  {\normalfont\Large\color{tssteelblue}}% format applied to label+text
-  {
-    \begin{tikzpicture}
-      \draw (0,0) --(7,0);
-    \end{tikzpicture}
-  }% label
-  % {\llap{\colorbox{orange}{\parbox{1.5cm}{\hfill\color{white}\thesection}}}}% label
-  {1em}% horizontal separation between label and title body
-  {}% before the title body
-  []% after the title body
+\fancypagestyle{chapter-E}{
+  \fancyhf{}
+  \fancyfootoffset[l]{\marginparwidth + \marginparsep}
+  \fancyfoot[L]{\textbf{\pplj \thepage}}
+}
 
-
-% Chapter styling
-%--------------------------------------------------------------------------
 \RequirePackage{ifoddpage}
-
-\makeatletter
-
-% Cut-off line
-% \newcommand{\lb\line}{\tikz[remember picture,overlay] \draw[fill=lbdeepblue,draw opacity=0]
-% (current page.north west)++(0,-2cm) rectangle ++(\paperwidth,-4pt);}
-
-% Numbered chapters
-\renewcommand{\@makechapterhead}[2][Summary]{
+% Chapter样式
+%--------------------------------------------------------------------------
+\renewcommand{\@makechapterhead}[1]{
   \checkoddpage
-  \@ifoddpage{
+  \@ifoddpage{ % 奇数页
     \begin{tikzpicture}[remember picture,overlay]
       \node at (current page.north west)
         {
@@ -223,32 +249,21 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
             \draw[fill=lbdeepblue,draw opacity=0]
               ++(0,-2cm) rectangle ++(\paperwidth,-4pt);
             \node[color=lbdeepgreen,inner sep=12pt,below left] (chapter)
-              at  +(\paperwidth-1.2cm,-2cm) {\fontsize{40pt}{1pt}\selectfont\pplj\thechapter};
+              at  +(\paperwidth-1.2cm,-2cm) {\fontsize{40pt}{1pt}\selectfont\pplj \thechapter};
             \draw[line width=2pt,color=lbgreen] 
               ++(\paperwidth-1.2cm,0) |- ($(chapter.south west)+(0,4pt)$);
             \node[color=lbdeepblue,left,outer sep=2pt] at (chapter.south west)
               {
                 \parbox[c][][c]{10cm}
-                {\flushright\Huge\ppl #2}
+                {\flushright\Huge\titlefont   #1}
               };
-
-            % 预留设计,图片或者导言;取消设计需要更改参数
-            \node[below right,inner sep=12pt] (text) at ++(2cm,-5cm)
-              {
-                \parbox[c][][c]{5.5cm}
-                {\small\ppl #1}
-              };
-            \draw[line width=2pt,color=lbgreen]
-              ++(2cm,-2cm-4pt) |- (text.south east);
-            %
-
           \end{tikzpicture}
         };
     \end{tikzpicture}
     \vspace{7cm}
-    % Page number styling
-    \thispagestyle{non-content-O}
-  }{
+    % 页面样式
+    \thispagestyle{chapter-O}
+  }{ % 偶数页
     \begin{tikzpicture}[remember picture,overlay]
       \node at (current page.north west)
         {
@@ -256,337 +271,439 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
             \draw[fill=lbdeepblue,draw opacity=0]
               ++(0,-2cm) rectangle ++(\paperwidth,-4pt);
             \node[color=lbdeepgreen,inner sep=12pt,below right] (chapter)
-              at  +(1.2cm,-2cm) {\fontsize{40pt}{1pt}\selectfont\pplj\thechapter};
+              at  +(1.2cm,-2cm) {\fontsize{40pt}{1pt}\selectfont\pplj \thechapter};
             \draw[line width=2pt,color=lbgreen] 
               ++(1.2cm,0) |- ($(chapter.south east)+(0,4pt)$);
             \node[color=lbdeepblue,right,outer sep=2pt] at (chapter.south east)
               {
                 \parbox[c][][c]{10cm}
-                {\flushleft\Huge\ppl #2}
+                {\flushleft\Huge\titlefont   #1}
               };
-
-            % 预留设计,图片或者导言;取消设计需要更改参数
-            \node[below left,inner sep=12pt] (text) at ++(\paperwidth-2cm,-5cm)
-              {
-                \parbox[c][][c]{5.5cm}
-                {\small\ppl #1}
-              };
-            \draw[line width=2pt,color=lbgreen]
-              ++(\paperwidth-2cm,-2cm-4pt) |- (text.south west);
-            %
-
           \end{tikzpicture}
         };
     \end{tikzpicture}
     \vspace{7cm}
-    % Page number styling
-    \thispagestyle{non-content-E}
+    % 页面样式
+    \thispagestyle{chapter-E}
   }
 }
 
-% Unnumbered chapters
-\renewcommand{\@makeschapterhead}[1]{
-  \checkoddpage
-  \@ifoddpage{
-    \begin{tikzpicture}[remember picture,overlay]
-      \node at (current page.north west)
-        {
-          \begin{tikzpicture}[remember picture,overlay]
-            \draw[fill=lbdeepblue,draw opacity=0]
-              ++(0,-2cm) rectangle ++(\paperwidth,-4pt);
-            \node[color=lbdeepblue,inner sep=12pt,below left] (text)
-              at  +(\paperwidth-6.1cm,-2cm) {\Huge\ppl #1};
-            \draw[line width=2pt,color=lbgreen]
-              ++(\paperwidth-6.1cm,0) |- ($(text.south west)+(0,4pt)$); 
-          \end{tikzpicture}
-        };
-    \end{tikzpicture}
-    \vspace{2cm}
-    % Page number styling
-    \thispagestyle{non-content-O}
-  }{
-    \begin{tikzpicture}[remember picture,overlay]
-      \node at (current page.north west)
-        {
-          \begin{tikzpicture}[remember picture,overlay]
-            \draw[fill=lbdeepblue,draw opacity=0]
-              ++(0,-2cm) rectangle ++(\paperwidth,-4pt);
-            \node[color=lbdeepblue,inner sep=12pt,below right] (text)
-              at  +(6.1cm,-2cm) {\Huge\ppl #1};
-            \draw[line width=2pt,color=lbgreen]
-              ++(6.1cm,0) |- ($(text.south east)+(0,4pt)$); 
-          \end{tikzpicture}
-        };
-    \end{tikzpicture}
-    \vspace{2cm}
-    % Page number styling
-    \thispagestyle{non-content-E}
-  }
-}
-
-
-% Table of contents styling
+% Chapter 导言
 %--------------------------------------------------------------------------
-\RequirePackage{titletoc}
-\setcounter{tocdepth}{2}
+\newcommand{\introhead}[2][7cm]{
+  \checkoddpage
+  \@ifoddpage{ % 奇数页
+    \begin{tikzpicture}[remember picture,overlay]
+      \node at (current page.north west)
+        {
+          \begin{tikzpicture}[remember picture,overlay]
+            \node[below right,inner sep=12pt] (text) at ++(2cm,-5cm)
+              {
+                \parbox[c][][c]{#1}
+                {\small #2}
+              };
+            \draw[line width=2pt,color=lbgreen]
+              ++(2cm,-2cm-4pt) |- (text.south east);
+          \end{tikzpicture}
+        };
+    \end{tikzpicture}
+    \vspace{2cm}
+  }{ % 偶数页
+    \begin{tikzpicture}[remember picture,overlay]
+      \node at (current page.north west)
+        {
+          \begin{tikzpicture}[remember picture,overlay]
+            \node[below left,inner sep=12pt] (text) at ++(\paperwidth-2cm,-5cm)
+              {
+                \parbox[c][][c]{#1}
+                {\small #2}
+              };
+            \draw[line width=2pt,color=lbgreen]
+              ++(\paperwidth-2cm,-2cm-4pt) |- (text.south west);
+          \end{tikzpicture}
+        };
+    \end{tikzpicture}
+    \vspace{2cm}
+  }
+}
 
-\titlecontents{chapter}[0cm]
-{\addvspace{14pt}\large\sffamily\bfseries}
-{\color{tssteelblue}\contentslabel[\Large\thecontentslabel]{1.25cm}}{}
-{\color{tssteelblue}\normalsize\sffamily\bfseries
- \;\titlerule*[.5pc]{.}\;\thecontentspage}
+% Section等样式
+%--------------------------------------------------------------------------
+\ctexset{
+  section={
+    format+=\normalfont\raggedright\bfseries\color{lbdeepblue},
+    numberformat=\pplj\color{lbdeepyellow},
+    aftertitle = \color{lbdeepyellow!50}\par\medskip\nointerlineskip\rule{\linewidth}{1pt}\par
+  },
+  subsection={
+    format+=\normalfont\color{lbdeepblue},
+    numberformat=\pplj\color{lbdeepyellow}
+  },
+  subsubsection={
+    format+=\normalfont\blackheavy\color{lbdeepblue}
+  }
+}
 
-\titlecontents{section}[0cm]
-{\addvspace{6pt}\sffamily\bfseries}
-{\contentslabel[\thecontentslabel]{1.25cm}}{}
-{\sffamily\hfill\color{black}\thecontentspage}[]
+% 分割线
+%--------------------------------------------------------------------------
+\newcommand{\lbline}{
+  \checkoddpage
+  \@ifoddpage{\par
+    \tikz[remember picture,overlay] \draw[fill=lbdeepblue,draw opacity=0]
+    (-2.74cm,0) rectangle ++(\paperwidth,-4pt);\par
+    \vspace*{1em}\par
+  }{\par
+    \tikz[remember picture,overlay] \draw[fill=lbdeepblue,draw opacity=0]
+    (-6.84cm,0) rectangle ++(\paperwidth,-4pt);\par
+    \vspace*{1em}\par
+  }
+}
+
+% 目录样式
+%--------------------------------------------------------------------------
+% \RequirePackage{titletoc}
+% \setcounter{tocdepth}{2}
+
+% \titlecontents{chapter}[0cm]
+% {\addvspace{14pt}\large\sffamily\bfseries}
+% {\color{tssteelblue}\contentslabel[\Large\thecontentslabel]{1.25cm}}{}
+% {\color{tssteelblue}\normalsize\sffamily\bfseries
+%  \;\titlerule*[.5pc]{.}\;\thecontentspage}
+
+% \titlecontents{section}[0cm]
+% {\addvspace{6pt}\sffamily\bfseries}
+% {\contentslabel[\thecontentslabel]{1.25cm}}{}
+% {\sffamily\hfill\color{black}\thecontentspage}[]
 
 
 % Front matter
 %--------------------------------------------------------------------------
-\newcommand{\tsbook}[9]{    % TODO 把这里的命令改掉ts改掉
+% \newcommand{\tsbook}[9]{    % TODO 把这里的命令改掉ts改掉
 
-\frontmatter
-\newgeometry{left=1.2cm,right=1.2cm,top=2cm,bottom=2cm}
+% \frontmatter
+% \newgeometry{left=1.2cm,right=1.2cm,top=2cm,bottom=2cm}
 
-\def\@tstitle{#1}
-\def\@tsauthor{#2}
-\def\@tscoverdesign{#3}
-\def\@tsyear{#4}
-\def\@tsartno{#5}
-\def\@tsisbn{#6}
-\def\@tsedition{#7}
-\def\@tspublished{#8}
-\def\@tsprinted{#9}
+% \def\@tstitle{#1}
+% \def\@tsauthor{#2}
+% \def\@tscoverdesign{#3}
+% \def\@tsyear{#4}
+% \def\@tsartno{#5}
+% \def\@tsisbn{#6}
+% \def\@tsedition{#7}
+% \def\@tspublished{#8}
+% \def\@tsprinted{#9}
 
-% Cover
-% \BgThispage % setting the background TODO 可选选项
+% % Cover
+% % \BgThispage % setting the background TODO 可选选项
 
-% Title page
-\pagestyle{empty}
+% % 扉页
+% \pagestyle{empty}
 
-\begin{center}
-  \null
-  \smallskip
+% \begin{center}
+%   \null
+%   \smallskip
 
-  \color{black}
-  \sffamily
+%   \color{black}
+%   \sffamily
 
-  \Huge
-  \textsc{\@tstitle}
+%   \Huge
+%   \textsc{\@tstitle}
 
-  \bigskip
-  \smallskip
+%   \bigskip
+%   \smallskip
 
-  \LARGE
-  \textsc{\@tsauthor} \\[1em]
-  \Large
-  \textsc{\@tspublished}
-\end{center}
+%   \LARGE
+%   \textsc{\@tsauthor} \\[1em]
+%   \Large
+%   \textsc{\@tspublished}
+% \end{center}
 
-\clearpage
+% \clearpage
 
-% Copyright page
-\null
-\vfill
-\begin{flushleft}
-  Copyright \copyright \ \@tsyear \ \@tsauthor \\
-  \vspace{5mm}
-  \textbf{Copying prohibited} \\
-  \vspace{5mm}
-  All rights reserved. No part of this publication may be reproduced
-  or transmitted in any form or by any means, electronic or
-  mechanical, including photocopying and recording, or by any
-  information storage or retrieval system, without the prior written
-  permission of the publisher. \\
-  \vspace{5mm}
-  Art. No \@tsartno \\
-  ISBN \@tsisbn \\
-  Edition \@tsedition \\
-  \vspace{5mm}
-  Cover design by \@tscoverdesign \\
-  \vspace{5mm}
-  Published by \@tspublished \\
-  Printed in \@tsprinted
-\end{flushleft}
+% % 版权页
+% \null
+% \vfill
+% \begin{flushleft}
+%   Copyright \copyright \ \@tsyear \ \@tsauthor \\
+%   \vspace{5mm}
+%   \textbf{Copying prohibited} \\
+%   \vspace{5mm}
+%   All rights reserved. No part of this publication may be reproduced
+%   or transmitted in any form or by any means, electronic or
+%   mechanical, including photocopying and recording, or by any
+%   information storage or retrieval system, without the prior written
+%   permission of the publisher. \\
+%   \vspace{5mm}
+%   Art. No \@tsartno \\
+%   ISBN \@tsisbn \\
+%   Edition \@tsedition \\
+%   \vspace{5mm}
+%   Cover design by \@tscoverdesign \\
+%   \vspace{5mm}
+%   Published by \@tspublished \\
+%   Printed in \@tsprinted
+% \end{flushleft}
 
-\clearpage
-% \savegeometry{beforepreface} TODO 视情况删除
+% \clearpage
+% % \savegeometry{beforepreface} TODO 视情况删除
 
-% Table of contents
-\restoregeometry
-\tableofcontents
-\pagestyle{content}
+% % Table of contents
+% \restoregeometry
+% \tableofcontents
+% \pagestyle{content}
 
-% Preface (and others)  TODO:重新设计宏命令
-{\chapter*{Preface}
-\noindent textsc  % TODO:重新设计
+% % Preface (and others)  TODO:重新设计宏命令
+% {\chapter*{Preface}
+% \noindent textsc  % TODO:重新设计
+% }
+
+
+
+% \cleardoublepage
+% \thispagestyle{empty}
+
+% \mainmatter
+% }
+
+
+% 盒子环境
+%--------------------------------------------------------------------------
+% 颜色配置
+\definecolor{lbdefcolor}{HTML}{008194}  % 定义颜色
+\definecolor{lbthecolor}{HTML}{ffb94c}  % 定理颜色
+\definecolor{lblemcolor}{HTML}{a8a8a8}  % 引理颜色
+\definecolor{lbremcolor}{HTML}{9ab685}  % 标注颜色
+\definecolor{lbexacolor}{HTML}{a62b31}  % 例子颜色
+
+\RequirePackage[many]{tcolorbox}
+\newtheoremstyle{lbstyle}%
+  {}%
+  {}%
+  {}%
+  {}%
+  {\sffamily\bfseries}%
+  {}%
+  {.5em}%
+  {}%
+
+\renewenvironment{proof}{{\sffamily\bfseries\,证明 }\setlength{\parindent}{2\ccwd}}{\hfill $\color{lbthecolor}\blacksquare$}
+
+\theoremstyle{lbstyle}{
+  \newtheorem*{remark}{\,注}
 }
 
+\theoremstyle{lbstyle}{
+  \newtheorem{definition}{定义}[section]
+}
+\renewcommand{\thedefinition}{\thechapter.\arabic{section}.\arabic{definition}}
 
+\theoremstyle{lbstyle}{
+  \newtheorem{theorem}{定理}[section]
+}
+\renewcommand{\thetheorem}{\thechapter.\arabic{section}.\arabic{theorem}}
 
-\cleardoublepage
-\thispagestyle{empty}
+\theoremstyle{lbstyle}{
+  \newtheorem{lemma}{\,引理}[section]
+}
+\renewcommand{\thelemma}{\thechapter.\arabic{section}.\arabic{lemma}}
 
-\mainmatter
+\theoremstyle{lbstyle}{
+  \newtheorem{example}{\,例}[chapter]
+}
+\renewcommand{\theexample}{\arabic{chapter}.\arabic{example}}
+
+% \theoremstyle{lbstyle}{
+%     \newtheorem{exercise}{}[chapter]
+% }
+
+% 解答环境
+\newcommand*{\sed}[1][$\color{lbexacolor}\blacksquare$]{%
+\leavevmode\unskip\penalty9999 \hbox{}\nobreak\hfill
+    \quad\hbox{#1}%
+}
+\newenvironment{solution}[1][解]{\setlength{\parindent}{2\ccwd}
+  \pushQED{\sed}%
+  % \normalfont \topsep6\p@\@plus6\p@\relax
+  % \trivlist
+  % \item[\sffamily\bfseries
+  %   \,#1\hspace{.5em}]\ignorespaces
+  \par\noindent\,{\sffamily\bfseries #1}\hspace{.5em}\ignorespaces
+}{\popQED\@endpefalse\par}
+
+% 盒子设置
+\tcolorboxenvironment{definition}{
+  boxrule=0pt,
+  boxsep=2pt,
+  colback={white!90!lbdefcolor},
+  enhanced jigsaw, 
+  borderline west={2pt}{-7pt}{lbdefcolor},
+  sharp corners,
+  before skip=10pt,
+  after skip=10pt,
+  left=0pt,
+  right=0pt,
+  breakable,
 }
 
+\tcolorboxenvironment{theorem}{
+  boxrule=0pt,
+  boxsep=2pt,
+  colback={white!90!lbthecolor},
+  enhanced jigsaw, 
+  borderline west={2pt}{-7pt}{lbthecolor},
+  sharp corners,
+  before skip=10pt,
+  after skip=10pt,
+  left=0pt,
+  right=0pt,
+  breakable,
+}
 
-% Boxes for theorems
+\tcolorboxenvironment{lemma}{
+  boxrule=0pt,
+  boxsep=2pt,
+  blanker,
+  borderline west={2pt}{-7pt}{lblemcolor},
+  before skip=10pt,
+  after skip=10pt,
+  sharp corners,
+  left=0pt,
+  right=0pt,
+  breakable,
+}
+
+\tcolorboxenvironment{proof}{
+  boxrule=0pt,
+  boxsep=2pt,
+  blanker,
+  before skip=10pt,
+  after skip=10pt,
+  left=0pt,
+  right=0pt,
+  breakable,
+}
+
+\tcolorboxenvironment{remark}{
+  boxrule=0pt,
+  boxsep=2pt,
+  blanker,
+  borderline west={2pt}{-7pt}{lbremcolor},
+  before skip=10pt,
+  after skip=10pt,
+  left=0pt,
+  right=0pt,
+  breakable,
+}
+
+\tcolorboxenvironment{remark}{
+  boxrule=0pt,
+  boxsep=2pt,
+  blanker,
+  before skip=10pt,
+  after skip=10pt,
+  left=0pt,
+  right=0pt,
+  breakable,
+}
+
+\tcolorboxenvironment{example}{
+  boxrule=0pt,
+  boxsep=2pt,
+  blanker,
+  borderline west={2pt}{-7pt}{lbexacolor},
+  sharp corners,
+  before skip=10pt,
+  after skip=10pt,
+  left=0pt,
+  right=0pt,
+  breakable,
+}
+
+% 环境
 %--------------------------------------------------------------------------
-\newenvironment{boxtheorem}
-{\begin{tcolorbox}
-[enhanced jigsaw,breakable,pad at break*=1mm,
- colback=black!5,colframe=tsorange]}
-{\end{tcolorbox}}
+\newcounter{fullwidthlinewidth}
+\newenvironment{fullwidth}[1][2]
+    { \checkoddpage
+      \setcounter{fullwidthlinewidth}{#1}
+      \par\vspace*{5mm}\noindent
+      \@ifoddpage{\hspace{-2pt}}{\hspace{-\marginparwidth-\marginparsep-3pt}}
+      \begin{minipage}{\textwidth+\marginparwidth+\marginparsep}
+      {\color{lbgreen}\hrule height #1pt}\medskip
+    }
+    {
+      \medskip{\color{lbgreen}\hrule height \value{fullwidthlinewidth}pt}
+      \end{minipage}\vspace*{5mm}
+    }
+% \newenvironment{fullwidth}[1][2]
+%     { \checkoddpage
+%       \setcounter{fullwidthlinewidth}{#1}
+%       \par\vspace*{5mm}
+%       \@ifoddpage{
+%         \begin{adjustwidth}{0em}{-\marginparwidth-\marginparsep}\sj
+%       }{
+%         \begin{adjustwidth}{-\marginparwidth-\marginparsep}{0em}\sj
+%       }
+%       {\color{lbgreen}\hrule height #1pt}\medskip
+%     }
+%     {
+%       \medskip{\color{lbgreen}\hrule height \value{fullwidthlinewidth}pt}
+%       % \end{minipage}\vspace*{5mm}
+%       \end{adjustwidth}\vspace*{5mm}
+%     }
 
-\newenvironment{boxdefinition}
-{\begin{tcolorbox}
-[enhanced jigsaw,breakable,pad at break*=1mm,
- colback=yellow!10!white,boxrule=0pt,frame hidden,
- borderline west={1.5mm}{-2mm}{tsforestgreen}]}
-{\end{tcolorbox}}
-
-\newenvironment{boxexercise}
-{\begin{tcolorbox}
-[enhanced jigsaw,breakable,pad at break*=1mm,
- colback=tsyellow!20,boxrule=0pt,frame hidden]}
-{\end{tcolorbox}}
-
-\newenvironment{boxproblem}
-{\begin{tcolorbox}
-[enhanced jigsaw,breakable,pad at break*=1mm,
- colback=tsorange!25,boxrule=0pt,frame hidden]}
-{\end{tcolorbox}}
-
-\newenvironment{boxprogramming}
-{\begin{tcolorbox}
-[enhanced jigsaw,breakable,pad at break*=1mm,
- colback=tsblue!10,boxrule=0pt,frame hidden]}
-{\end{tcolorbox}}
-
-\newenvironment{boxexample}
-{\begin{tcolorbox}
-[enhanced jigsaw,breakable,pad at break*=1mm,
- colback=tsgrey!20,boxrule=0pt,frame hidden]}
-{\end{tcolorbox}}
-
-
-% Styling of theorems
+% 旁注
 %--------------------------------------------------------------------------
-\RequirePackage{amsthm}
+\RequirePackage{marginnote,sidenotes}
+\renewcommand*{\raggedleftmarginnote}{\noindent}
+\renewcommand*{\raggedrightmarginnote}{\noindent}
+\newcommand{\mnn}[1]{\textsuperscript{\thesidenote}{}\marginnote{\textsuperscript{\thesidenote}{}~\small #1}\refstepcounter{sidenote}}
+% 在定理,定义等环境中使用,有标号,不会重叠
+\newcommand{\mn}[1]{\marginnote{\small #1}} % 无标号,会重叠
+\newcommand{\snn}[1]{\sidenote{\small #1}}  % 有标号,不会重叠,定义定理等环境中无法使用
 
-\newtheoremstyle{styletheorem}
-{0pt}{0pt}{\normalfont}{0pt}{\small\bf\sffamily\color{tsorange}}{\;}{0.25em}
-{\small\sffamily\color{tsorange}\thmname{#1}
- \nobreakspace\thmnumber{\@ifnotempty{#1}{}\@upn{#2}}
- \thmnote{\nobreakspace\the\thm@notefont\sffamily\bfseries\color{black} (#3)}}
+%% TODO 每个chapter后面把旁注编号计数器清零
 
-\newtheoremstyle{styledefinition}
-{0pt}{0pt}{\normalfont}{0pt}{\small\bf\sffamily\color{black}}{\;}{0.25em}
-{\small\sffamily\color{tsforestgreen}\thmname{#1}
- \nobreakspace\thmnumber{\@ifnotempty{#1}{}\@upn{#2}}
- \thmnote{\nobreakspace\the\thm@notefont\sffamily\bfseries\color{black} (#3)}}
-
-\newtheoremstyle{styleexercise}
-{0pt}{0pt}{\normalfont}{0pt}{\small\bf\sffamily\color{black}}{\;}{0.25em}
-{\small\sffamily\color{black}\thmname{#1}
- \nobreakspace\thmnumber{\@ifnotempty{#1}{}\@upn{#2}}
- \thmnote{\nobreakspace\the\thm@notefont\sffamily\bfseries\color{black} (#3)}}
-
-\theoremstyle{styledefinition}
-\newtheorem{envdefinition}{Definition}[chapter]
-\theoremstyle{styletheorem}
-\newtheorem{envtheorem}{Theorem}[chapter]
-\newtheorem{envlemma}{Lemma}[chapter]
-\theoremstyle{styleexercise}
-\newtheorem{envexercise}{Exercise}[chapter]
-\newtheorem{envproblem}{Problem}[chapter]
-\newtheorem{envprogramming}{Computer exercise}[chapter]
-\newtheorem{envexample}{Exempel}[chapter]
-
-
-% Environments for theorems
+% 参考文献
 %--------------------------------------------------------------------------
-\newenvironment{definition}
-               {\begin{boxdefinition}\begin{envdefinition}}
-               {\end{envdefinition}\end{boxdefinition}}
-
-\newenvironment{theorem}
-               {\begin{boxtheorem}\begin{envtheorem}}
-               {\end{envtheorem}\end{boxtheorem}}
-
-\newenvironment{corollary}
-               {\begin{boxtheorem}\begin{envtheorem}}
-               {\end{envtheorem}\end{boxtheorem}}
-
-\newenvironment{lemma}
-               {\begin{boxtheorem}\begin{envlemma}}
-               {\end{envlemma}\end{boxtheorem}}
-
-\newenvironment{exercise}
-               {\begin{boxexercise}\begin{envexercise}}
-               {\end{envexercise}\end{boxexercise}}
-
-\newenvironment{problem}
-               {\begin{boxproblem}\begin{envproblem}}
-               {\end{envproblem}\end{boxproblem}}
-
-\newenvironment{programming}
-               {\begin{boxprogramming}\begin{envprogramming}}
-               {\end{envprogramming}\end{boxprogramming}}
-
-\newenvironment{example}
-               {\begin{boxexample}\begin{envexample}}
-               {\end{envexample}\end{boxexample}}
-
-
-% Other environments
-%--------------------------------------------------------------------------
-\newenvironment{summary}
-{\hspace{10pt}\par\small\it
- \begin{list}{}{\leftmargin=35pt\rightmargin=25pt}
- \item\ignorespaces\advance\baselineskip -1pt}
-{\end{list}\vspace{-0.5cm}}
-
-\newenvironment{remark}
-{\vspace{0.5cm}\noindent\small\it
- \marginpar{\vspace{-3mm}\includegraphics[width=1.0cm]{idea}}}
-{\vspace{0.5cm}}
-
-
-% Bibliography
-%--------------------------------------------------------------------------
-\RequirePackage[backend=biber,style=authoryear]{biblatex}
-\RequirePackage[autostyle=true]{csquotes} 
-% Required to generate language-dependent quotes in the bibliography
-
+\RequirePackage[backend=biber,
+            style=gb7714-2015ms,  % 同一文献表中不同语言区分著录格式的样式 (gb7714-2015ms)
+            gbstyle=false,
+            hyperref=true,
+            % backref=true,
+            ]{biblatex}
 \addbibresource{bibliography.bib}
 
-
-% Index
+% 索引
 %--------------------------------------------------------------------------
-\RequirePackage{makeidx}
-\makeindex
+% \RequirePackage{makeidx}
+% \makeindex
 
-
-% Packages for mathematics and algorithms
+% 其他宏包
 %--------------------------------------------------------------------------
-\RequirePackage{algorithm}
-\RequirePackage{algpseudocode}
-\RequirePackage{xfrac}
-\RequirePackage{mathtools}
-\RequirePackage{wasysym}
-\RequirePackage{siunitx}
-\newcommand\bmmax{2}
-\RequirePackage{bm}
-\RequirePackage{amsmath}
-\RequirePackage{amssymb}
+\RequirePackage{blindtext}          % 无厘头文字
+\RequirePackage{booktabs}           % 表格线
+\RequirePackage{makecell}           % 表格格式组织
+\RequirePackage{multirow}           % 表格行列格式
+\RequirePackage{url}                % 超链接
+\RequirePackage{hologo}	            % TeX系列标识
+\RequirePackage{siunitx}            % 标准单位宏包
+\RequirePackage{xfrac}              % 优化行内斜分数 \sfrac{1}{2}
+\RequirePackage{ragged2e}           % 断词宏包
+\RequirePackage{wrapfig}            % 图文绕排
+\RequirePackage{multicol}           % 多栏
+\RequirePackage{paralist}	          % 列表宏包
+\RequirePackage{floatrow}           % 图表浮动组
+\RequirePackage{physics}            % 物理宏包
+\RequirePackage{fix-cm}             % 调整字号
+\RequirePackage{pdfpages}           % 插入pdf页面
+\RequirePackage{romanbar}           % 罗马数字
+\RequirePackage{tabularx}           % 表格宏包
+\RequirePackage{pifont}             % 符号宏包
+\RequirePackage{changepage}         % 改变页面边距
 
-
-% Other useful packages
+% 自定义命令
 %--------------------------------------------------------------------------
-\RequirePackage{blindtext}
-\RequirePackage[most]{tcolorbox}
-\RequirePackage{booktabs}
-\RequirePackage{url}
+\newcommand{\sj}[1][2]{\hspace{#1\ccwd}}     % 手动缩进命令:\sj[<数字>自定义距离],默认为两个字宽.
+\newcommand{\hc}[1]{\textbf{\blackheavy #1}} % 黑体加粗,用于第一次出现的名词概念和版权页部分内容.
+\newcommand{\LBK}{L\kern-.255em\raise.5ex\hbox{B}\kern-.125em\lower.1em \hbox{K}}
+\endinput
