@@ -90,8 +90,8 @@
                 heading = true]{ctex}
 \ctexset{autoindent=2\ccwd}
 
-\xeCJKsetup{PlainEquation=true}    % 使用$$...$$来输入行间公式   
-\xeCJKsetup{CJKmath=true}          % 在数学环境中输出CJK字符  
+\xeCJKsetup{PlainEquation=true}    % 使用$$...$$来输入行间公式
+\xeCJKsetup{CJKmath=true}          % 在数学环境中输出CJK字符
 \xeCJKsetup{EmboldenFactor=2}      % 伪加粗程度
 \xeCJKsetup{CheckSingle=true}      % 避免孤字成行
 
@@ -99,7 +99,7 @@
 \ifbool{custom}{
   % 中文字体
   \setCJKmainfont[ItalicFont={方正楷体简体}]{Noto Serif CJK SC}
-  \setCJKmonofont{方正仿宋_GBK.ttf}
+  \setCJKmonofont{方正仿宋简体}
   \setCJKsansfont[AutoFakeBold=true]{方正黑体_GBK}
   % 英文字体
   \setmainfont{XITS}
@@ -140,7 +140,7 @@
                 marginparsep=0.4cm,marginparwidth=4.5cm,
                 showframe,                           % for design
                 % showcrop                             % for design
-                ]{geometry}           
+                ]{geometry}
 
 % 配色
 % 定理等盒子的配色见"盒子环境"部分
@@ -250,7 +250,7 @@
               ++(0,-2cm) rectangle ++(\paperwidth,-4pt);
             \node[color=lbdeepgreen,inner sep=12pt,below left] (chapter)
               at  +(\paperwidth-1.2cm,-2cm) {\fontsize{40pt}{1pt}\selectfont\pplj \thechapter};
-            \draw[line width=2pt,color=lbgreen] 
+            \draw[line width=2pt,color=lbgreen]
               ++(\paperwidth-1.2cm,0) |- ($(chapter.south west)+(0,4pt)$);
             \node[color=lbdeepblue,left,outer sep=2pt] at (chapter.south west)
               {
@@ -272,7 +272,7 @@
               ++(0,-2cm) rectangle ++(\paperwidth,-4pt);
             \node[color=lbdeepgreen,inner sep=12pt,below right] (chapter)
               at  +(1.2cm,-2cm) {\fontsize{40pt}{1pt}\selectfont\pplj \thechapter};
-            \draw[line width=2pt,color=lbgreen] 
+            \draw[line width=2pt,color=lbgreen]
               ++(1.2cm,0) |- ($(chapter.south east)+(0,4pt)$);
             \node[color=lbdeepblue,right,outer sep=2pt] at (chapter.south east)
               {
@@ -361,109 +361,6 @@
 
 % 目录样式
 %--------------------------------------------------------------------------
-% \RequirePackage{titletoc}
-% \setcounter{tocdepth}{2}
-
-% \titlecontents{chapter}[0cm]
-% {\addvspace{14pt}\large\sffamily\bfseries}
-% {\color{tssteelblue}\contentslabel[\Large\thecontentslabel]{1.25cm}}{}
-% {\color{tssteelblue}\normalsize\sffamily\bfseries
-%  \;\titlerule*[.5pc]{.}\;\thecontentspage}
-
-% \titlecontents{section}[0cm]
-% {\addvspace{6pt}\sffamily\bfseries}
-% {\contentslabel[\thecontentslabel]{1.25cm}}{}
-% {\sffamily\hfill\color{black}\thecontentspage}[]
-
-
-% Front matter
-%--------------------------------------------------------------------------
-% \newcommand{\tsbook}[9]{    % TODO 把这里的命令改掉ts改掉
-
-% \frontmatter
-% \newgeometry{left=1.2cm,right=1.2cm,top=2cm,bottom=2cm}
-
-% \def\@tstitle{#1}
-% \def\@tsauthor{#2}
-% \def\@tscoverdesign{#3}
-% \def\@tsyear{#4}
-% \def\@tsartno{#5}
-% \def\@tsisbn{#6}
-% \def\@tsedition{#7}
-% \def\@tspublished{#8}
-% \def\@tsprinted{#9}
-
-% % Cover
-% % \BgThispage % setting the background TODO 可选选项
-
-% % 扉页
-% \pagestyle{empty}
-
-% \begin{center}
-%   \null
-%   \smallskip
-
-%   \color{black}
-%   \sffamily
-
-%   \Huge
-%   \textsc{\@tstitle}
-
-%   \bigskip
-%   \smallskip
-
-%   \LARGE
-%   \textsc{\@tsauthor} \\[1em]
-%   \Large
-%   \textsc{\@tspublished}
-% \end{center}
-
-% \clearpage
-
-% % 版权页
-% \null
-% \vfill
-% \begin{flushleft}
-%   Copyright \copyright \ \@tsyear \ \@tsauthor \\
-%   \vspace{5mm}
-%   \textbf{Copying prohibited} \\
-%   \vspace{5mm}
-%   All rights reserved. No part of this publication may be reproduced
-%   or transmitted in any form or by any means, electronic or
-%   mechanical, including photocopying and recording, or by any
-%   information storage or retrieval system, without the prior written
-%   permission of the publisher. \\
-%   \vspace{5mm}
-%   Art. No \@tsartno \\
-%   ISBN \@tsisbn \\
-%   Edition \@tsedition \\
-%   \vspace{5mm}
-%   Cover design by \@tscoverdesign \\
-%   \vspace{5mm}
-%   Published by \@tspublished \\
-%   Printed in \@tsprinted
-% \end{flushleft}
-
-% \clearpage
-% % \savegeometry{beforepreface} TODO 视情况删除
-
-% % Table of contents
-% \restoregeometry
-% \tableofcontents
-% \pagestyle{content}
-
-% % Preface (and others)  TODO:重新设计宏命令
-% {\chapter*{Preface}
-% \noindent textsc  % TODO:重新设计
-% }
-
-
-
-% \cleardoublepage
-% \thispagestyle{empty}
-
-% \mainmatter
-% }
 
 
 % 盒子环境
@@ -535,7 +432,7 @@
   boxrule=0pt,
   boxsep=2pt,
   colback={white!90!lbdefcolor},
-  enhanced jigsaw, 
+  enhanced jigsaw,
   borderline west={2pt}{-7pt}{lbdefcolor},
   sharp corners,
   before skip=10pt,
@@ -549,7 +446,7 @@
   boxrule=0pt,
   boxsep=2pt,
   colback={white!90!lbthecolor},
-  enhanced jigsaw, 
+  enhanced jigsaw,
   borderline west={2pt}{-7pt}{lbthecolor},
   sharp corners,
   before skip=10pt,
